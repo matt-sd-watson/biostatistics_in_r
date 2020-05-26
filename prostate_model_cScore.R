@@ -127,5 +127,7 @@ eval_results(y_test, predictions_test, validation_set)
 gam_model <- gam(Cscore ~ s(lpsa, bs='cr', sp=1) + s(lcavol, bs='cr', sp=1) + s(lcp, bs='cr', sp=1) + s(lweight, bs='cr', sp=1) + svi, data = prostate)
 summary(gam_model)
 dev.off()
+
+# establish a series of graphf or each of the "smoothed" variables 
 par(mfrow=c(2,3))
 plot(gam_model)
