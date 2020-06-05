@@ -1,5 +1,5 @@
 #prostate dataset
-load("~/Documents/KU Leuven/Courses/Semester 2 2020/Statistical Methods for Bioinformatics/Assignment/prostate2.rdata")
+load("~/Documents/KU Leuven/Courses/Semester 2 2020/Statistical Methods for Bioinformatics/Part II/Assignment/prostate2.rdata")
 # gain an impression of the predictor and response variables
 head(prostate, 10)
 
@@ -14,6 +14,9 @@ library(glmnet)
 library(corrplot)
 library(dplyr)
 library(mgcv)
+require(stats)
+require(graphics)
+library(splines)
 
 # check if there are null values for any of the predictor variables and append all counts
 # to a list
@@ -124,10 +127,19 @@ eval_results(y_test, predictions_test, validation_set)
 # use a smooth spline for each of the variables except for the binary factor
 # a lambda value of 1 is used based on experimentation to optimize the smoothing fit
 
-gam_model <- gam(Cscore ~ s(lpsa, bs='cr', sp=1) + s(lcavol, bs='cr', sp=1) + s(lcp, bs='cr', sp=1) + s(lweight, bs='cr', sp=1) + svi, data = prostate)
-summary(gam_model)
+# create a first gamwith natural spline functions
+natural_spline <- lm(Cscore ~ ns(lpsa, df = 5) + ns(lcavol, df = 5) + ns(lcp, df = 5) + ns(lweight, df = 5) + svi, data = prostate)
+summary(natural_spline)
+
+smoothed_gam <- gam(Cscore ~ s(lpsa, bs='cr', sp=1) + s(lcavol, bs='cr', sp=1) + s(lcp, bs='cr', sp=1) + s(lweight, bs='cr', sp=1) + svi, data = prostate)
+summary(smoothed_gam)
+
+# evaluate the difference in error between the two gam models
+# we see that there is a significant difference in the reiduals between the two models
+# we select the smoothed gam model as it explains more of the variance
+anova(natural_spline, smoothed_gam)
 dev.off()
 
 # establish a series of graphf or each of the "smoothed" variables 
 par(mfrow=c(2,3))
-plot(gam_model)
+plot(smoothed_gam)
