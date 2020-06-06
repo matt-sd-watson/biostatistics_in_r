@@ -128,18 +128,19 @@ eval_results(y_test, predictions_test, validation_set)
 # a lambda value of 1 is used based on experimentation to optimize the smoothing fit
 
 # create a first gamwith natural spline functions
-natural_spline <- lm(Cscore ~ ns(lpsa, df = 5) + ns(lcavol, df = 5) + ns(lcp, df = 5) + ns(lweight, df = 5) + svi, data = prostate)
+natural_spline <- lm(Cscore ~ ns(lpsa, df = 4) + ns(lcavol, df = 4) + ns(lcp, df = 4) + ns(lweight, df = 4) + svi, data = prostate)
 summary(natural_spline)
 
 smoothed_gam <- gam(Cscore ~ s(lpsa, bs='cr', sp=1) + s(lcavol, bs='cr', sp=1) + s(lcp, bs='cr', sp=1) + s(lweight, bs='cr', sp=1) + svi, data = prostate)
 summary(smoothed_gam)
 
 # evaluate the difference in error between the two gam models
-# we see that there is a significant difference in the reiduals between the two models
+# we see that there is imporved performance with the smoothed splines in terms
+# of the residual sum of squared errors
 # we select the smoothed gam model as it explains more of the variance
 anova(natural_spline, smoothed_gam)
 dev.off()
 
-# establish a series of graphf or each of the "smoothed" variables 
+# establish a series of graph for each of the "smoothed" variables 
 par(mfrow=c(2,3))
 plot(smoothed_gam)
