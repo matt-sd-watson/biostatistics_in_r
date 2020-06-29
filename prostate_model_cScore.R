@@ -100,7 +100,7 @@ x = as.matrix(train_dummies)
 
 # train the lasso model using the training set and find the optimal laambda value
 lasso_reg <- cv.glmnet(x, y_train, alpha = 1, lambda = lambdas, standardize = TRUE, nfolds = 5)
-
+s
 # find the minimum of the lasso lambda values to apply as a penalty
 lambda_best <- lasso_reg$lambda.min 
 lambda_best
@@ -135,7 +135,7 @@ smoothed_gam <- gam(Cscore ~ s(lpsa, bs='cr', sp=1) + s(lcavol, bs='cr', sp=1) +
 summary(smoothed_gam)
 
 # evaluate the difference in error between the two gam models
-# we see that there is imporved performance with the smoothed splines in terms
+# we see that there is moderate improved performance with the smoothed splines in terms
 # of the residual sum of squared errors
 # we select the smoothed gam model as it explains more of the variance
 anova(natural_spline, smoothed_gam)
