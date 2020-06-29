@@ -144,3 +144,23 @@ dev.off()
 # establish a series of graph for each of the "smoothed" variables 
 par(mfrow=c(2,3))
 plot(smoothed_gam)
+
+# principal component analysis
+require(pls)
+prostate.pca <- prcomp(prostate, center = TRUE,scale. = TRUE)
+# evaluate the pca object from prostate
+
+summary(prostate.pca)
+library(ggbiplot)
+ggbiplot(prostate.pca, labels = round(prostate$Cscore, 2))
+# from this graph we see that lpsa, lcavol correlate strongly with the first
+# principal component
+
+# we try seeing the values when plotting using the 3rd and 4th principal components
+# as we expect, we don't see as strong an association of the variables with the 3rd 
+# principal component, except for lpsa
+ggbiplot(prostate.pca, labels = round(prostate$Cscore, 2), choices = c(3,4))
+
+# we can look at how much of each parameter contributes to the
+# components
+prostate.pca
